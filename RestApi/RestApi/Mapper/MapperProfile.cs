@@ -11,6 +11,11 @@ namespace RestApi.Mapper
         public MapperProfile()
         {
             CreateMap<Employee, EmployeeReturnDto>();
+               
+                
+                
+            CreateMap<Employee, EmployeeUpdateDto>().ReverseMap();
+            CreateMap<Employee, EmployeeCreateDto>().ReverseMap();
 
             CreateMap<List<EmployeeReturnDto>, EmployeeListDto>()
              .ForMember(l => l.TotalCount, map => map.MapFrom(s => s.Count))

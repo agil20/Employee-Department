@@ -10,5 +10,6 @@ namespace RestApi.Models
         public  int DepartmentId { get; set; }
         public DateTime BirthDate { get; set; }
         public DateTime CreateDate { get; set; }
+        public Department Department { get; set; }
     }
 }

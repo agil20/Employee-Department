@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RestApi.Data;
 using RestApi.Dtos;
 using RestApi.Models;
@@ -28,45 +29,93 @@ namespace RestApi.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var query = _context.Employees.AsQueryable();
+            var query = _context.Employees.Include(n => n.Department).AsQueryable();
 
 
             List<EmployeeReturnDto> employeeReturns = _mapper.Map<List<EmployeeReturnDto>>(query.ToList());
-          EmployeeListDto cetogory = _mapper.Map<EmployeeListDto>(employeeReturns);
-            return Ok (  cetogory);
+            EmployeeListDto employeeListDto = _mapper.Map<EmployeeListDto>(employeeReturns);
+            return Ok(employeeListDto);
         }
         [HttpGet("{id}")]
         public IActionResult GetOne(int id)
         {
-            Employee employee = _context.Employees.FirstOrDefault(p => p.Id == id);
+            Employee employee = _context.Employees.Include(e=>e.Department).FirstOrDefault(p => p.Id == id);
             if (employee == null)
             {
                 return NotFound();
             }
+
             EmployeeReturnDto employeeReturn = _mapper.Map<EmployeeReturnDto>(employee);
 
             return Ok(employeeReturn);
 
 
 
+            }
+        [HttpPost]
+
+        public IActionResult CreateEmployee(EmployeeCreateDto employeecreate)
+        {
+
+            if (employeecreate == null)
+            {
+                return NotFound();
+            }
+
+            Employee employee = _mapper.Map<Employee>(employeecreate);
+            employee.CreateDate = DateTime.Now;
+
+            _context.Employees.Add(employee);
+            _context.SaveChanges();
+            return Ok();
+
+
         }
-        //[HttpPost]
+        [HttpDelete]
 
-        //public IActionResult CreateEmployee(EmployeeCreate employeecreate)
-        //{
+        public IActionResult DeleteEmployee(int id)
+        {
 
-        //    if (employeecreate==null)
-        //    {
-        //        return NotFound();
-        //    }
+            Employee employee = _context.Employees.FirstOrDefault(p => p.Id == id);
+            if (employee == null)
+            {
+                return NotFound();
 
-        //    Employee employee = _mapper.Map<Employee>(employeecreate);
-        //    employee.CreateDate = DateTime.Now;
-        //    _context.Employees.Add(employee);
-        //    _context.SaveChanges();
-        //    return Ok();
+            }
+            _context.Employees.Remove(employee);
+            _context.SaveChanges();
+            return Ok();
 
 
-        //}
-    }
+
+
+
+        }
+        [HttpPut("{id}")]
+        public IActionResult UpdateEmployee(int id, EmployeeUpdateDto employeeDto)
+        {
+
+            Employee employee = _context.Employees.FirstOrDefault(e => e.Id == id);
+            if (employeeDto.Name != null)
+            {
+                employee.Name = employeeDto.Name;
+            }
+            if (employee.Surname != null)
+            {
+                employee.Surname = employeeDto.Surname;
+            }
+            if (employeeDto.DepartmentId != 0)
+            {
+                employee.DepartmentId = employeeDto.DepartmentId;
+            }
+            _context.SaveChanges();
+            return Ok();
+
+
+
+
+            }
+
+
+        }
 }

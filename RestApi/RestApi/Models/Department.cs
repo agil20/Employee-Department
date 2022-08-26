@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace RestApi.Models
 {
@@ -8,6 +9,7 @@ namespace RestApi.Models
         public string Name { get; set; }
 
         public DateTime CreateDate { get; set; }
+        public List<Employee> Employees { get; set; }
 
     }
 }
