@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RestApi.Data;
 using RestApi.Dtos;
+using RestApi.Filter;
 using RestApi.Models;
 using System;
 using System.Collections.Generic;
@@ -115,7 +116,23 @@ namespace RestApi.Controllers
 
 
             }
+    //    [HttpGet("{Filter}")]
+    //    public IActionResult Filter( [FromQuery] FilterEmployee filter)
+    //    {
+    //        switch (filter.Filter)
+    //        {
+    //            case RestApi.Filter.Filter.Age:
+    //                break ;
+    //            case RestApi.Filter.Filter.Xperience:
+    //                break;
+    //            default:
+    //                break;
+    //        }
 
 
-        }
+    //    }
+
+
+
+    }
 }
